@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Chris!</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;500&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #ffdef2;
+            color: #ff69b4;
+            overflow-x: hidden;
+        }
+        
+        .title-font {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .candle {
+            position: relative;
+            width: 30px;
+            height: 120px;
+            background: linear-gradient(to bottom, #f9d5e5, #fce4ec);
+            border-radius: 5px 5px 0 0;
+            margin: 0 auto;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+        
+        .flame {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 15px;
+            height: 25px;
+            background: #ffcc00;
+            border-radius: 50% 50% 20% 20%;
+            box-shadow: 
+                0 0 20px #ff6600,
+                0 0 40px #ff3300,
+                0 0 60px #ff0000;
+            animation: flicker 1.5s infinite alternate;
+        }
+        
+        @keyframes flicker {
+            0%, 100% {
+                transform: translateX(-50%) scale(1);
+                opacity: 1;
+            }
+            25% {
+                transform: translateX(-50%) scale(1.1, 0.9);
+            }
+            50% {
+                transform: translateX(-50%) scale(0.9, 1.1);
+            }
+            75% {
+                transform: translateX(-50%) scale(1.05, 0.95);
+            }
+        }
+        
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background-color: #ff69b4;
+            opacity: 0;
+            z-index: 999;
+            animation: confetti-fall 5s linear infinite;
+        }
+        
+        @keyframes confetti-fall {
+            0% {
+                transform: translate(0, -100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(0, 100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .flower {
+            width: 100px;
+            height: 100px;
+            background: url('https://example.com/flower.png') no-repeat center center;
+            background-size: contain;
+            transition: transform 0.2s;
+        }
+        
+        #cake {
+            transition: transform 0.1s;
+        }
+        
+        #cake:active {
+            transform: scale(0.95);
+        }
+
+        .bunny {
+            width: 120px;
+            height: 120px;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+        
+        .bunny:active {
+            transform: scale(0.9);
+        }
+        
+        .hearts-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        
+        .heart {
+            position: absolute;
+            font-size: 20px;
+            color: #ff69b4;
+            animation: float-up 2s forwards;
+        }
+        
+        @keyframes float-up {
+            0% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px);
+                opacity: 0;
+            }
+        }
+
+        #scratchCanvas {
+            touch-action: none;
+        }
+        
+        .scratch-hide {
+            visibility: hidden;
+        }
+        
+        #videoContainer {
+            background: #000;
+        }
+        
+        #videoContainer iframe {
+            width: 100%;
+            height: 100%;
+        }
+
+        #snakeCanvas {
+            background-color: #f0f9ff;
+        }
+
+        #prizeCanvas {
+            touch-action: none;
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="%23ff69b4" d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"/></svg>'), auto;
+        }
+
+        .prize-text {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            color: #ff69b4;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+    <!-- Confetti Container -->
+    <div id="confetti-container"></div>
+    
+    <!-- Hero Section -->
+    <section class="relative py-20 px-4 flex items-center justify-center min-h-screen bg-gradient-to-b from-blue-100 to-blue-200">
+        <div class="relative z-10 max-w-4xl w-full text-center">
+            <h1 class="title-font text-5xl md:text-7xl font-bold mb-6">
+                Happy Birthday <span class="text-pink-600">Chris!</span>
+            </h1>
+            
+            <div class="flex justify-center flex-wrap mb-10 gap-4 bg-pink-50 bg-opacity-60 p-4 rounded-full">
+                <div class="candle">
+                    <div class="flame"></div>
+                </div>
+                <div class="candle">
+                    <div class="flame"></div>
+                </div>
+                <div class="candle">
+                    <div class="flame"></div>
+                </div>
+                <div class="candle">
+                    <div class="flame"></div>
+                </div>
+                <div class="candle">
+                    <div class="flame"></div>
+                </div>
+                <div class="candle">
+                    <div class="flame"></div>
+                </div>
+            </div>
+            
+            <p class="text-xl mb-8 max-w-2xl mx-auto">
+                "For I know the plans I have for you," declares the Lord, "plans to prosper you and not to harm you, plans to give you hope and a future."<br>
+                <span class="text-sm">— Jeremiah 29:11</span>
+            </p>
+            
+            <div class="bg-white bg-opacity-80 p-8 rounded-lg max-w-md mx-auto shadow-lg">
+                <h3 class="title-font text-2xl mb-4">Let's Play a Game!</h3>
+                <p class="mb-4">Answer these questions:</p>
+                
+                <div class="mb-4">
+                    <p>1. Where do we first met?</p>
+                    <div>
+                        <button onclick="checkAnswer('bali')" class="bg-pink-500 text-white px-4 py-2 rounded">Bali</button>
+                        <button onclick="checkAnswer('paris')" class="bg-blue-500 text-white px-4 py-2 rounded">Paris</button>
+                        <button onclick="checkAnswer('newyork')" class="bg-pink-500 text-white px-4 py-2 rounded">New York</button>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <p>2. When is our wedding?</p>
+                    <div>
+                        <button onclick="checkAnswer('2025')" class="bg-pink-500 text-white px-4 py-2 rounded">September 17, 2025</button>
+                        <button onclick="checkAnswer('2024')" class="bg-blue-500 text-white px-4 py-2 rounded">September 17, 2024</button>
+                        <button onclick="checkAnswer('2023')" class="bg-pink-500 text-white px-4 py-2 rounded">September 17, 2023</button>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <p>3. What is my favorite thing about you?</p>
+                    <div>
+                        <button onclick="checkAnswer('heart')" class="bg-pink-500 text-white px-4 py-2 rounded">Your Heart</button>
+                        <button onclick="checkAnswer('smile')" class="bg-blue-500 text-white px-4 py-2 rounded">Your Smile</button>
+                        <button onclick="checkAnswer('humor')" class="bg-pink-500 text-white px-4 py-2 rounded">Your Humor</button>
+                    </div>
+                </div>
+                
+                <div id="result" class="hidden text-lg mt-4"></div>
+            </div>
+            
+            <!-- Bunny Tapping Game -->
+            <div class="mt-10 mx-auto max-w-md bg-white bg-opacity-80 p-6 rounded-lg shadow-lg">
+                <h3 class="title-font text-2xl mb-4 text-center">Pet the Bunny!</h3>
+                <div class="relative w-48 h-48 mx-auto mb-4">
+                    <div class="bunny" onclick="petBunny()">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/c03ae2dd-7437-4119-a427-ef03bb0a0d64.png" 
+                             alt="Cute bunny" class="w-full h-full object-contain">
+                        <div class="hearts-container" id="heartsContainer"></div>
+                    </div>
+                    <div id="tapCount" class="mt-2 text-center font-bold text-pink-600">
+                        Pets: 0 ❤️
+                    </div>
+                </div>
+                <p class="text-center">Keep petting to make hearts appear!</p>
+            </div>
+            
+            <div id="flowerContainer" class="hidden mt-10">
+                <div class="flower" id="flower"></div>
+                <p class="text-lg mt-4">Tap the flower to make it grow!</p>
+            </div>
+
+            <!-- Scratch Card Game -->
+            <div id="scratchGame" class="hidden mt-10 mx-auto max-w-md bg-white bg-opacity-80 p-6 rounded-lg shadow-lg">
+                <h3 class="title-font text-2xl mb-4 text-center">Scratch to Reveal!</h3>
+                <div class="relative w-full h-48 mx-auto mb-4">
+                    <canvas id="scratchCanvas" width="400" height="200" 
+                            class="w-full h-full bg-gray-300 cursor-crosshair rounded-lg"></canvas>
+                    <div class="absolute inset-0 flex items-center justify-center hidden" id="videoContainer">
+                        <div class="bg-black w-full h-full flex items-center justify-center">
+                            <iframe id="youtubeVideo" width="100%" height="100%" 
+                                    src=""
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                    allowfullscreen></iframe>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-center">Scratch the area to reveal your special surprise!</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Scratch Prize Game -->
+    <section class="py-12 px-4 bg-gradient-to-b from-pink-100 to-purple-100">
+        <div class="max-w-md mx-auto">
+            <h2 class="title-font text-3xl mb-4 text-center">Scratch for a Prize!</h2>
+            <div class="relative bg-white p-6 rounded-lg shadow-xl">
+                <canvas id="prizeCanvas" width="400" height="200" 
+                        class="w-full border-4 border-pink-300 rounded-lg bg-pink-50"></canvas>
+                <div class="absolute inset-0 hidden" id="prizeResult">
+                    <img src="https://placehold.co/400x200/pink/white?text=You+Win!🎁" 
+                         alt="You win prize" class="w-full h-full object-cover">
+                </div>
+                <div class="mt-4 text-center">
+                    <p class="text-xl">Scratch to reveal your prize!</p>
+                    <button id="resetScratch" class="mt-2 bg-purple-500 text-white px-4 py-2 rounded-lg">
+                        Try Again
+                    </button>
+                </div>
+            </div>
+            <p class="text-center mt-4">Scratch the pink area to win a surprise!</p>
+        </div>
+    </section>
+
+    <!-- Snake Game -->
+    <section class="py-12 px-4 bg-gradient-to-b from-blue-100 to-pink-100">
+        <div class="max-w-md mx-auto">
+            <h2 class="title-font text-3xl mb-4 text-center">Snake Game!</h2>
+            <div class="relative bg-white p-6 rounded-lg shadow-lg">
+                <canvas id="snakeCanvas" width="400" height="400"
+                        class="w-full border-4 border-pink-300 rounded"></canvas>
+                <div class="mt-4 text-center">
+                    <p id="snakeScore" class="text-xl">Score: 0</p>
+                    <button id="startSnake" class="mt-2 bg-pink-500 text-white px-4 py-2 rounded-lg">
+                        Start Game
+                    </button>
+                </div>
+            </div>
+            <p class="text-center mt-4">Use arrow keys to control the snake</p>
+        </div>
+    </section>
+
+    <!-- Memory Gallery -->
+    <section class="py-12 px-4 bg-white bg-opacity-70">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="title-font text-3xl mb-8 text-center">Our Precious Memories</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="memory-card rounded-lg overflow-hidden shadow-lg">
+                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/b58eaa0c-35b9-43ee-a434-effb690498ea.png" alt="Our first meeting in Bali" class="w-full h-48 object-cover">
+                    <p class="p-4 text-center">Where it all began</p>
+                </div>
+                <div class="memory-card rounded-lg overflow-hidden shadow-lg">
+                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/28bf9308-ad19-4a47-a53b-4c799908438b.png" alt="Special moment together" class="w-full h-48 object-cover">
+                    <p class="p-4 text-center">Cherished moments</p>
+                </div>
+                <div class="memory-card rounded-lg overflow-hidden shadow-lg">
+                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/a059640c-342b-4889-b49d-42267559991f.png" alt="Laughing together" class="w-full h-48 object-cover">
+                    <p class="p-4 text-center">Joyful times</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Make a Wish Section -->
+    <section class="py-12 px-4 bg-gradient-to-b from-pink-100 to-blue-100">
+        <div class="max-w-md mx-auto bg-white p-8 rounded-lg shadow-lg">
+            <h2 class="title-font text-3xl mb-6 text-center">Make a Birthday Wish</h2>
+            <textarea id="birthdayWish" class="w-full p-4 mb-4 border border-pink-300 rounded-lg" 
+                      placeholder="Write your birthday wish for me..."></textarea>
+            <button onclick="sendWish()" class="w-full bg-pink-500 text-white py-3 px-6 rounded-lg hover:bg-pink-600 transition">
+                Send Wish via WhatsApp
+            </button>
+        </div>
+    </section>
+
+    <script>
+        function sendWish() {
+            const wish = document.getElementById('birthdayWish').value.trim();
+            if (wish) {
+                const encodedMessage = encodeURIComponent(`💖 Birthday Wish for You 💖\n\n${wish}\n\nLove you! ❤️`);
+                window.open(`https://wa.me/62895602392521?text=${encodedMessage}`, '_blank');
+            } else {
+                alert('Please write your birthday wish first!');
+            }
+        }
+        // Create confetti
+        function createConfetti() {
+            const container = document.getElementById('confetti-container');
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.width = Math.random() * 10 + 5 + 'px';
+                confetti.style.height = confetti.style.width;
+                confetti.style.animationDelay = Math.random() * 5 + 's';
+                confetti.style.backgroundColor = `hsl(${Math.random() * 60 + 30}, 100%, 50%)`;
+                container.appendChild(confetti);
+            }
+        }
+        
+        // Start confetti
+        document.addEventListener('DOMContentLoaded', createConfetti);
+        
+        // Track correct answers
+        const correctAnswers = {
+            'bali': false,
+            '2025': false,
+            'heart': false
+        };
+        let correctCount = 0;
+
+        // Check answers
+        function checkAnswer(answer) {
+            const resultDiv = document.getElementById('result');
+            
+            if (answer === 'bali' || answer === '2025' || answer === 'heart') {
+                if (!correctAnswers[answer]) {
+                    correctAnswers[answer] = true;
+                    correctCount++;
+                }
+                
+                resultDiv.innerHTML = "🎉 Correct! You're amazing! 💖";
+                resultDiv.classList.remove('hidden');
+                
+                if (correctCount < 3) {
+                    document.getElementById('flowerContainer').classList.remove('hidden');
+                    document.getElementById('flower').style.transform = 'scale(1)';
+                    document.getElementById('flower').onclick = growFlower;
+                }
+                
+                if (correctCount === 3) {
+                    document.getElementById('flowerContainer').classList.remove('hidden');
+                    document.getElementById('scratchGame').classList.remove('hidden');
+                    setupScratchGame();
+                }
+            } else {
+                resultDiv.innerHTML = "Oops! Try again!";
+                resultDiv.classList.remove('hidden');
+            }
+        }
+
+        // Setup scratch game
+        function setupScratchGame() {
+            const canvas = document.getElementById('scratchCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Fill with gray overlay
+            ctx.fillStyle = '#cccccc';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.globalCompositeOperation = 'destination-out';
+            
+            let isDrawing = false;
+            
+            canvas.addEventListener('mousedown', startDrawing);
+            canvas.addEventListener('touchstart', startDrawing);
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('touchmove', draw);
+            canvas.addEventListener('mouseup', stopDrawing);
+            canvas.addEventListener('touchend', stopDrawing);
+            
+            function startDrawing(e) {
+                isDrawing = true;
+                draw(e);
+            }
+            
+            function draw(e) {
+                if (!isDrawing) return;
+                
+                e.preventDefault();
+                const rect = canvas.getBoundingClientRect();
+                const x = (e.clientX || e.touches[0].clientX) - rect.left;
+                const y = (e.clientY || e.touches[0].clientY) - rect.top;
+                
+                ctx.beginPath();
+                ctx.arc(x, y, 30, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Check if enough is scratched (30% for easier reveal)
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                const pixels = imageData.data;
+                let transparentCount = 0;
+                
+                for (let i = 3; i < pixels.length; i += 4) {
+                    if (pixels[i] < 128) transparentCount++;
+                }
+                
+                const percentRevealed = transparentCount / (pixels.length / 4);
+                if (percentRevealed > 0.3) {
+                    canvas.classList.add('scratch-hide');
+                    const videoContainer = document.getElementById('videoContainer');
+                    videoContainer.classList.remove('hidden');
+                    const iframe = document.getElementById('youtubeVideo');
+                    iframe.src = "https://www.youtube.com/embed/jzCaGpESfiQ?start=591&autoplay=1&mute=1";
+                    stopDrawing();
+                }
+            }
+            
+            function stopDrawing() {
+                isDrawing = false;
+            }
+        }
+        
+        // Grow flower
+        let flowerSize = 1;
+        function growFlower() {
+            flowerSize += 0.1;
+            document.getElementById('flower').style.transform = `scale(${flowerSize})`;
+        }
+
+        // Bunny petting game
+        let pets = 0;
+        function petBunny() {
+            pets++;
+            document.getElementById('tapCount').textContent = `Pets: ${pets} ❤️`;
+            
+            // Create floating heart
+            const heartsContainer = document.getElementById('heartsContainer');
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.innerHTML = '❤️';
+            heart.style.left = Math.random() * 80 + 20 + 'px';
+            heartsContainer.appendChild(heart);
+            
+            // Remove heart after animation
+            setTimeout(() => {
+                heart.remove();
+            }, 2000);
+            
+            if (pets % 10 === 0) {
+                createConfetti();
+                if (pets === 30) {
+                    alert("🥰 The bunny loves you so much!");
+                }
+            }
+        }
+
+        // Snake Game
+        const snakeCanvas = document.getElementById('snakeCanvas');
+        const ctx = snakeCanvas.getContext('2d');
+        const startButton = document.getElementById('startSnake');
+        const scoreDisplay = document.getElementById('snakeScore');
+
+        let snake = [];
+        let food = {};
+        let direction = 'right';
+        let score = 0;
+        let gameRunning = false;
+        let gameSpeed = 100;
+        let gameLoop;
+
+        function initSnake() {
+            snake = [
+                {x: 200, y: 200},
+                {x: 190, y: 200},
+                {x: 180, y: 200},
+                {x: 170, y: 200},
+                {x: 160, y: 200}
+            ];
+            spawnFood();
+            score = 0;
+            scoreDisplay.textContent = `Score: ${score}`;
+            direction = 'right';
+            gameSpeed = 100;
+        }
+
+        function spawnFood() {
+            food = {
+                x: Math.floor(Math.random() * 20) * 20,
+                y: Math.floor(Math.random() * 20) * 20
+            };
+            // Make sure food doesn't spawn on snake
+            for (let segment of snake) {
+                if (segment.x === food.x && segment.y === food.y) {
+                    return spawnFood();
+                }
+            }
+        }
+
+        function drawSnake() {
+            ctx.clearRect(0, 0, snakeCanvas.width, snakeCanvas.height);
+            
+            // Draw food
+            ctx.fillStyle = '#ff69b4';
+            ctx.fillRect(food.x, food.y, 20, 20);
+            
+            // Draw snake
+            ctx.fillStyle = '#3b82f6';
+            snake.forEach(segment => {
+                ctx.fillRect(segment.x, segment.y, 18, 18);
+            });
+        }
+
+        function moveSnake() {
+            const head = {x: snake[0].x, y: snake[0].y};
+            
+            switch(direction) {
+                case 'up': head.y -= 20; break;
+                case 'down': head.y += 20; break;
+                case 'left': head.x -= 20; break;
+                case 'right': head.x += 20; break;
+            }
+            
+            // Check collision with walls
+            if (head.x < 0 || head.x >= snakeCanvas.width || 
+                head.y < 0 || head.y >= snakeCanvas.height) {
+                gameOver();
+                return;
+            }
+            
+            // Check collision with self
+            for (let segment of snake) {
+                if (segment.x === head.x && segment.y === head.y) {
+                    gameOver();
+                    return;
+                }
+            }
+            
+            snake.unshift(head);
+            
+            // Check if snake eats food
+            if (head.x === food.x && head.y === food.y) {
+                score += 10;
+                scoreDisplay.textContent = `Score: ${score}`;
+                spawnFood();
+                
+                // Increase speed slightly every 50 points
+                if (score % 50 === 0 && gameSpeed > 50) {
+                    gameSpeed -= 10;
+                    clearInterval(gameLoop);
+                    gameLoop = setInterval(gameStep, gameSpeed);
+                }
+            } else {
+                snake.pop();
+            }
+            
+            drawSnake();
+        }
+
+        function gameStep() {
+            moveSnake();
+        }
+
+        function startGame() {
+            if (gameRunning) return;
+            
+            gameRunning = true;
+            startButton.textContent = 'Playing...';
+            initSnake();
+            drawSnake();
+            gameLoop = setInterval(gameStep, gameSpeed);
+            
+            // Enable keyboard controls
+            document.addEventListener('keydown', changeDirection);
+        }
+
+        function gameOver() {
+            clearInterval(gameLoop);
+            gameRunning = false;
+            startButton.textContent = 'Play Again';
+            alert(`Game Over! Final Score: ${score}`);
+        }
+
+        function changeDirection(e) {
+            if (!gameRunning) return;
+            
+            switch(e.key) {
+                case 'ArrowUp':
+                    if (direction !== 'down') direction = 'up';
+                    break;
+                case 'ArrowDown':
+                    if (direction !== 'up') direction = 'down';
+                    break;
+                case 'ArrowLeft':
+                    if (direction !== 'right') direction = 'left';
+                    break;
+                case 'ArrowRight':
+                    if (direction !== 'left') direction = 'right';
+                    break;
+            }
+        }
+
+        startButton.addEventListener('click', startGame);
+
+        // Scratching Game
+        const prizeCanvas = document.getElementById('prizeCanvas');
+        const prizeCtx = prizeCanvas.getContext('2d');
+        const prizeResult = document.getElementById('prizeResult');
+        const resetBtn = document.getElementById('resetScratch');
+        
+        function initScratchGame() {
+            prizeResult.classList.add('hidden');
+            prizeCtx.globalCompositeOperation = 'source-over';
+            prizeCtx.fillStyle = '#ffb6c1';
+            prizeCtx.fillRect(0, 0, prizeCanvas.width, prizeCanvas.height);
+            prizeCtx.globalCompositeOperation = 'destination-out';
+            
+            prizeCanvas.width = prizeCanvas.offsetWidth;
+            prizeCanvas.height = prizeCanvas.offsetHeight;
+            
+            let isScratching = false;
+            
+            prizeCanvas.addEventListener('mousedown', startScratching);
+            prizeCanvas.addEventListener('touchstart', startScratching);
+            prizeCanvas.addEventListener('mousemove', scratch);
+            prizeCanvas.addEventListener('touchmove', scratch);
+            prizeCanvas.addEventListener('mouseup', stopScratching);
+            prizeCanvas.addEventListener('touchend', stopScratching);
+            
+            function startScratching(e) {
+                isScratching = true;
+                scratch(e);
+            }
+            
+            function scratch(e) {
+                if (!isScratching) return;
+                
+                const rect = prizeCanvas.getBoundingClientRect();
+                const x = (e.clientX || e.touches[0].clientX) - rect.left;
+                const y = (e.clientY || e.touches[0].clientY) - rect.top;
+                
+                prizeCtx.beginPath();
+                prizeCtx.arc(x, y, 25, 0, Math.PI * 2);
+                prizeCtx.fill();
+                
+                checkScratch();
+            }
+            
+            function stopScratching() {
+                isScratching = false;
+            }
+            
+            function checkScratch() {
+                const imageData = prizeCtx.getImageData(0, 0, prizeCanvas.width, prizeCanvas.height);
+                const pixels = imageData.data;
+                let scratched = 0;
+                
+                for (let i = 3; i < pixels.length; i += 4) {
+                    if (pixels[i] < 128) scratched++;
+                }
+                
+                const percentScratched = scratched / (pixels.length / 4);
+                if (percentScratched > 0.5) {
+                    prizeResult.classList.remove('hidden');
+                }
+            }
+        }
+        
+        resetBtn.addEventListener('click', initScratchGame);
+        initScratchGame();
+
+        // Set canvas size
+        function resizeCanvas() {
+            const size = Math.min(400, window.innerWidth - 40);
+            snakeCanvas.width = size;
+            snakeCanvas.height = size;
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+    </script>
+</body>
+</html>
